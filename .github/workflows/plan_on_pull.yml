@@ -10,17 +10,6 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
-
-    with:
-     client_id: ${{secrets.CLIENT_ID}}
-     client_secret: ${{secrets.CLIENT_SECRET}}
-     subscription_id: ${{secrets.SUBSCRIPTION_ID}}
-     tenant_id: ${{secrets.TENANT_ID}}
-
-     # general vars
-     project: ${{secrets.PROJECT}}
-     environment: ${{secrets.ENVIRONMENT}}
-     location: ${{secrets.LOCATION}}
       
     steps:
       - uses: actions/checkout@v2
@@ -36,3 +25,13 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
+        with:
+          client_id: ${{secrets.CLIENT_ID}}
+          client_secret: ${{secrets.CLIENT_SECRET}}
+          subscription_id: ${{secrets.SUBSCRIPTION_ID}}
+          tenant_id: ${{secrets.TENANT_ID}}
+
+          # general vars
+          project: ${{secrets.PROJECT}}
+          environment: ${{secrets.ENVIRONMENT}}
+          location: ${{secrets.LOCATION}}

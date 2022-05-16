@@ -32,3 +32,13 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        with:
+          client_id: ${{secrets.CLIENT_ID}}
+          client_secret: ${{secrets.CLIENT_SECRET}}
+          subscription_id: ${{secrets.SUBSCRIPTION_ID}}
+          tenant_id: ${{secrets.TENANT_ID}}
+
+          # general vars
+          project: ${{secrets.PROJECT}}
+          environment: ${{secrets.ENVIRONMENT}}
+          location: ${{secrets.LOCATION}}
