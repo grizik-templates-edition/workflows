@@ -10,14 +10,14 @@ jobs:
 
     env:
      client_id: ${{secrets.CLIENT_ID}}
-      client_secret: ${{secrets.CLIENT_SECRET}}
-      subscription_id: ${{secrets.SUBSCRIPTION_ID}}
-      tenant_id: ${{secrets.TENANT_ID}}
+     client_secret: ${{secrets.CLIENT_SECRET}}
+     subscription_id: ${{secrets.SUBSCRIPTION_ID}}
+     tenant_id: ${{secrets.TENANT_ID}}
 
-      # general vars
-      project: ${{secrets.PROJECT}}
-      environment: ${{secrets.ENVIRONMENT}}
-      location: ${{secrets.LOCATION}}
+     # general vars
+     project: ${{secrets.PROJECT}}
+     environment: ${{secrets.ENVIRONMENT}}
+     location: ${{secrets.LOCATION}}
       
     steps:
       - uses: actions/checkout@v2
