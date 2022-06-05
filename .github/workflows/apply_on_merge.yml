@@ -4,23 +4,25 @@ on:
   push:
     branches: [ main ]
 
+name: Build on Ubuntu
+on: push
+ 
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./terraform
-    env:
-          TF_VAR_client_id: ${{secrets.CLIENT_ID}}
-          TF_VAR_client_secret: ${{secrets.CLIENT_SECRET}}
-          TF_VAR_subscription_id: ${{secrets.SUBSCRIPTION_ID}}
-          TF_VAR_tenant_id: ${{secrets.TENANT_ID}}
-
+    env:  
+    zone: var.zone
+          TF_VAR_service_token: ${{secrets.SERVICE_TOKEN}}
+          TF_VAR_service_account_name: ${{secrets.SERVICE_ACCOUNT_NAME}}
+          TF_VAR_project_id: ${{secrets.PROJECT_ID}}
+          TF_VAR_project_name: ${{secrets.PROJECT_NAME}}
           # general vars
-          TF_VAR_project: ${{secrets.PROJECT}}
-          TF_VAR_environment: ${{secrets.ENVIRONMENT}}
-          TF_VAR_location: ${{secrets.LOCATION}}
-
+          TF_VAR_region: ${{secrets.REGION}}
+          TF_VAR_ZONE: ${{secrets.ZONE}}
     steps:
       - uses: actions/checkout@v2
 
@@ -32,4 +34,29 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Download gcloud tools
+        run: |
+          sudo apt-get install apt-transport-https ca-certificates gnupg
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+          sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg
+          sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
+      - name: Add credentials file
+        run: echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
+
+      - name: Authorize gcloud util
+        run: gcloud auth activate-service-account ${{secrets.SERVICE_ACCOUNT_NAME} --key-file=./key.json
+
+      - name: Make site available to internet
+        run: gsutil iam ch allUsers:objectViewer gs://${{secrets.PROJECT_NAME}}
+      - name: Push files to gcp bucket
+        run: gsutil rsync -r ./${{secrets.LANDING_TEMPLATE}}/ gs://${{secrets.PROJECT_NAME}}
+
+          
         
