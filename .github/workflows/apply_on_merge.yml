@@ -39,9 +39,9 @@ jobs:
       - name: Download gcloud tools
         run: |
           sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg 
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg  
           sudo tee /usr/share/keyrings/cloud.google.gpg
-          sudo apt-get install google-cloud-cli
+          sudo apt-get update && sudo apt-get install google-cloud-cli
 
       - name: Add credentials file
         run: echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
