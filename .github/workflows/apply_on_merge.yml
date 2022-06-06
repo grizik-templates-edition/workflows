@@ -47,7 +47,7 @@ jobs:
         run: echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
 
       - name: Authorize gcloud util
-        run: gcloud auth activate-service-account ${{secrets.SERVICE_ACCOUNT_NAME} --key-file=./key.json
+        run: gcloud auth activate-service-account ${{secrets.SERVICE_ACCOUNT_NAME}} --key-file=./key.json
 
       - name: Make site available to internet
         run: gsutil iam ch allUsers:objectViewer gs://${{secrets.PROJECT_NAME}}
