@@ -15,7 +15,6 @@ jobs:
       run:
         working-directory: ./terraform
     env:  
-    zone: var.zone
           TF_VAR_service_token: ${{secrets.SERVICE_TOKEN}}
           TF_VAR_service_account_name: ${{secrets.SERVICE_ACCOUNT_NAME}}
           TF_VAR_project_id: ${{secrets.PROJECT_ID}}
