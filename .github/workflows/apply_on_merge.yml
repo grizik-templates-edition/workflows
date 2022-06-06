@@ -3,9 +3,6 @@ name: Terraform Apply
 on:
   push:
     branches: [ main ]
-
-name: Build on Ubuntu
-on: push
  
 
 jobs:
