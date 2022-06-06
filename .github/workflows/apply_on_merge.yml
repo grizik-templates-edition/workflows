@@ -29,7 +29,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply --auto-approve
   push:
     needs: terraform
     runs-on: ubuntu-latest
@@ -39,8 +39,8 @@ jobs:
       - name: Download gcloud tools
         run: |
           sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg  
-          sudo tee /usr/share/keyrings/cloud.google.gpg
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg
+          sudo apt-key add -
           sudo apt-get update && sudo apt-get install google-cloud-cli
 
       - name: Add credentials file
