@@ -18,7 +18,7 @@ jobs:
           TF_VAR_project_name: ${{secrets.PROJECT_NAME}}
           # general vars
           TF_VAR_region: ${{secrets.REGION}}
-          TF_VAR_ZONE: ${{secrets.ZONE}}
+          TF_VAR_zone: ${{secrets.ZONE}}
     steps:
       - uses: actions/checkout@v2
 
