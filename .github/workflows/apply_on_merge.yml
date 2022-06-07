@@ -12,10 +12,10 @@ jobs:
       run:
         working-directory: ./terraform
     env:  
-          TF_VAR_service_token: ${{secrets.SERVICE_TOKEN}}
           TF_VAR_service_account_name: ${{secrets.SERVICE_ACCOUNT_NAME}}
           TF_VAR_project_id: ${{secrets.PROJECT_ID}}
           TF_VAR_project_name: ${{secrets.PROJECT_NAME}}
+          TF_VAR_service_token: './key.json'
           # general vars
           TF_VAR_region: ${{secrets.REGION}}
           TF_VAR_zone: ${{secrets.ZONE}}
@@ -29,7 +29,9 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
-        run: terraform apply --auto-approve
+        run: |
+          echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
+          terraform apply --auto-approve
   push:
     needs: terraform
     runs-on: ubuntu-latest
@@ -40,19 +42,15 @@ jobs:
         run: |
           sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg
-          sudo apt-key add -
-          sudo apt-get update && sudo apt-get install google-cloud-cli
-
-      - name: Add credentials file
-        run: echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
-
+          sudo tee /usr/share/keyrings/cloud.google.gpg
+          sudo snap install google-cloud-cli --classic
       - name: Authorize gcloud util
-        run: gcloud auth activate-service-account ${{secrets.SERVICE_ACCOUNT_NAME}} --key-file=./key.json
-
-      - name: Make site available to internet
-        run: gsutil iam ch allUsers:objectViewer gs://${{secrets.PROJECT_NAME}}
+        run: |
+          echo ${{secrets.SERVICE_TOKEN}} >> ./key.json
+          gcloud auth activate-service-account ${{secrets.SERVICE_ACCOUNT_NAME}} --key-file="./key.json"
+     
       - name: Push files to gcp bucket
-        run: gsutil rsync -r ./${{secrets.LANDING_TEMPLATE}}/ gs://${{secrets.PROJECT_NAME}}
+        run: gsutil rsync -r ./${{secrets.TEMPLATE}}/ gs://${{secrets.PROJECT_NAME}}
 
           
         
