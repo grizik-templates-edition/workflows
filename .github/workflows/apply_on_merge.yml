@@ -52,7 +52,7 @@ jobs:
       - name: Push files to gcp bucket
         run: |
           gsutil rsync -r ./${{secrets.TEMPLATE}}/ gs://${{secrets.PROJECT_NAME}}
-          gsutil defacl set public-read gs://${{secrets.PROJECT_NAME}}
+          gsutil iam ch allUsers:objectViewer gs://${{secrets.PROJECT_NAME}}
 
           
         
